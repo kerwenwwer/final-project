@@ -61,6 +61,7 @@ ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 ALLEGRO_EVENT event;
 ALLEGRO_TIMER *timerfps=NULL;
 
+
 //MAIN FUNCTION
 int main(int argc, char *argv[]) {
     if (!al_init()) {
@@ -85,9 +86,8 @@ int main(int argc, char *argv[]) {
     al_register_event_source(event_queue,al_get_display_event_source(display));
     al_register_event_source(event_queue,al_get_keyboard_event_source());
     al_register_event_source(event_queue,al_get_timer_event_source(timerfps));
-
+    
     al_start_timer(timerfps);
-
     while(!done){
         
         al_wait_for_event(event_queue,&event);
@@ -102,6 +102,8 @@ int main(int argc, char *argv[]) {
                 MoveLeft(ship);
             if(keys[RIGHT])
                 MoveRight(ship);
+            if(keys[SPACE]){
+            }
             UpdateBullet(bullet,NUMBER_BULLETS);
             StartBackGround(background,NUMBER_BADGUY);
             UpdateBackGround(background,NUMBER_BADGUY);
@@ -127,7 +129,6 @@ int main(int argc, char *argv[]) {
                     break;
                 case ALLEGRO_KEY_SPACE:
                     keys[SPACE]=true;
-                    FireBullet(bullet,NUMBER_BULLETS,ship);
                     break;
                 
             }
@@ -150,6 +151,7 @@ int main(int argc, char *argv[]) {
                     break;
                 case ALLEGRO_KEY_SPACE:
                     keys[SPACE]=false;
+                     FireBullet(bullet,NUMBER_BULLETS,ship);
                     break;
             }
         }
