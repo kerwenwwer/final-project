@@ -12,7 +12,7 @@
 #define NUMBER_BADGUY 15
 #define width 600
 #define height 800
-#define FPS 120
+#define FPS 60
 
 
 
@@ -22,28 +22,37 @@ bool done=false;
 
 //announce function for game base
 void game_destroy();
-void InitShip(spaceship &ship);
-void DrawSip(spaceship &ship);
-void MoveUp(spaceship &ship);
-void MoveDown(spaceship &ship);
-void MoveLeft(spaceship &ship);
-void MoveRight(spaceship &ship);
+void InitShip(SpaceShip &ship);
+void DrawSip(SpaceShip &ship);
+void MoveUp(SpaceShip &ship);
+void MoveDown(SpaceShip &ship);
+void MoveLeft(SpaceShip &ship);
+void MoveRight(SpaceShip &ship);
 
 //Announce function for bullet
 void InitBullet(Bullet bullet[],int size);
 void DrawBullet(Bullet bullet[],int size);
-void FireBullet(Bullet bullet[],int size,spaceship &ship);
+void FireBullet(Bullet bullet[],int size,SpaceShip &ship);
 void UpdateBullet(Bullet bullet[],int size);
-
+void CollideBullet();
 //Announce function for badguy
 void InitBackGround(BackGround background[],int size);
 void DrawBackGround(BackGround background[],int size);
 void StartBackGround(BackGround background[],int size);
 void UpdateBackGround(BackGround background[],int size);
+//INIT ENEMY
+void InitEnemy(EnEmy &enemy);
+void DrawEnemy(EnEmy &enemy);
+void StartEnemy(EnEmy &enemy);
+void MoveEnemyUp(EnEmy &enemy);
+void MoveEnemyDown(EnEmy &enemy);
+void MoveEnemyLeft(EnEmy &enemy);
+void MoveEnemyRight(EnEmy &enemy);
 //init object
-spaceship ship;
+SpaceShip ship;
 Bullet bullet[NUMBER_BULLETS];
 BackGround background[NUMBER_BADGUY];
+EnEmy enemy;
 
 // ALLEGRO Variables
 ALLEGRO_DISPLAY* display = NULL;
@@ -120,6 +129,7 @@ int main(int argc, char *argv[]) {
                     keys[SPACE]=true;
                     FireBullet(bullet,NUMBER_BULLETS,ship);
                     break;
+                
             }
         }else if(event.type==ALLEGRO_EVENT_KEY_UP){
             switch(event.keyboard.keycode){
@@ -156,26 +166,8 @@ int main(int argc, char *argv[]) {
     al_destroy_display(display);
 }
 
-//WAY FUNCTION
-void MoveUp(spaceship &ship){
-    ship.y-=ship.speed;
-    ship.y=(ship.y<15)?15:ship.y;
-}
-void MoveDown(spaceship &ship){
-    ship.y+=ship.speed;
-    ship.y=(ship.y>height-40)?height-40:ship.y;
-}
-void MoveLeft(spaceship &ship){
-    ship.x-=ship.speed;
-    ship.x=(ship.x<17)?0:ship.x;
-}
-void MoveRight(spaceship &ship){
-    ship.x+=ship.speed;
-    ship.x=(ship.x>width)?width:ship.x;   
-}
-
 //SHIP FUNCTION
-void InitShip(spaceship &ship){
+void InitShip(SpaceShip &ship){
     ship.x=width/2;
     ship.y=height-40;
     ship.ID=PLAYER;
@@ -186,13 +178,30 @@ void InitShip(spaceship &ship){
     ship.score=0;
 }
 
-void DrawSip(spaceship &ship){
+void DrawSip(SpaceShip &ship){
     al_draw_filled_rectangle(ship.x-9,ship.y-5,ship.x-7,ship.y+10,al_map_rgb(255,0,255));
     al_draw_filled_rectangle(ship.x+9,ship.y-5,ship.x+7,ship.y+10,al_map_rgb(255,0,255));
 
     al_draw_filled_triangle(ship.x-17,ship.y+12,ship.x,ship.y-12,ship.x+17,ship.y+12,al_map_rgb(0,255,0));
     al_draw_filled_rectangle(ship.x-2,ship.y-12,ship.x+2,ship.y+15,al_map_rgb(0,0,255));
 }
+void MoveUp(SpaceShip &ship){
+    ship.y-=ship.speed;
+    ship.y=(ship.y<15)?15:ship.y;
+}
+void MoveDown(SpaceShip &ship){
+    ship.y+=ship.speed;
+    ship.y=(ship.y>height-40)?height-40:ship.y;
+}
+void MoveLeft(SpaceShip &ship){
+    ship.x-=ship.speed;
+    ship.x=(ship.x<17)?0:ship.x;
+}
+void MoveRight(SpaceShip &ship){
+    ship.x+=ship.speed;
+    ship.x=(ship.x>width)?width:ship.x;   
+}
+
 
 //BULLET FUNCTION
 void InitBullet(Bullet bullet[],int size){
@@ -209,7 +218,7 @@ void DrawBullet(Bullet bullet[],int size){
             al_draw_filled_circle(bullet[i].x+9,bullet[i].y,3,al_map_rgb(253,2,255));
     }
 }
-void FireBullet(Bullet bullet[],int size,spaceship &ship){
+void FireBullet(Bullet bullet[],int size,SpaceShip &ship){
     for(int i=0;i<size;i++){
         if(!bullet[i].live){
             bullet[i].x=ship.x;
@@ -236,8 +245,6 @@ void InitBackGround(BackGround background[],int size){
         background[i].ID=BACKGROUNG;
         background[i].live=false;
         background[i].speed=5;
-        background[i].boundx=5;
-        background[i].boundy=18;
     }
 }
 void DrawBackGround(BackGround background[],int size){
@@ -263,4 +270,31 @@ void UpdateBackGround(BackGround background[],int size){
                 background[i].live=false;
         }
     }
+}
+
+//ENEMY FUNCTIONS
+void InitEnemy(EnEmy &enemy){
+    enemy.livebegin=false;
+    enemy.x=10+rand()%(width-40);
+    enemy.y=(rand()%100)+1;
+    enemy.ID=EMEMY;
+    enemy.speed=5;
+    enemy.lives=50;
+}
+void DrawEnemy(EnEmy &enemy){
+    al_draw_filled_circle(enemy.x,enemy.y,10,al_map_rgb(255,0,0));
+}
+void StartEnemy(EnEmy &enemy){
+    
+}
+void MoveEnemyUp(EnEmy &enemy){
+
+}
+void MoveEnemyDown(EnEmy &enemy){
+
+}
+void MoveEnemyLeft(EnEmy &enemy){
+}
+void MoveEnemyRight(EnEmy &enemy){
+
 }

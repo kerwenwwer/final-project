@@ -1,38 +1,52 @@
 #include<stdio.h>
+#include "GameObj.h"
 //OBJECT INIT
-enum ID{PLAYER,BULLENT,BACKGROUNG,EMEMY};
 enum KEYS{UP,DOWN,LEFT,RIGHT,SPACE};
 bool keys[5]={false,false,false,false,false};
 
 //SPACESHIP
-struct spaceship{
-    int ID;
-    int x;
-    int y;
-    int lives;
-    int speed;
-    int boundx;
-    int boundy;
-    int score;
+class SpaceShip:public GameObj{
+    public:
+        int lives;
+        int speed;
+        int boundx;
+        int boundy;
+        int score;
+
+        SpaceShip():GameObj(PLAYER){
+
+        }
 };
 // BULLET
-struct Bullet{
-    int ID;
-    int x;
-    int y;
-    bool live;
-    int speed;
+class Bullet:public GameObj{
+    public:
+        bool live;
+        int speed;
 
+        Bullet():GameObj(BULLENT){
+
+        }
 };
 //BACKGROUNF 
-struct BackGround{
-    int ID;
-    int x;
-    int y;
-    bool live;
-    int boundx;
-    int boundy;
-    int speed;
+class BackGround:public GameObj{
+    public:
+        bool live;
+        int speed;
+
+        BackGround():GameObj(BACKGROUNG){
+
+        }
 };
 //ENEMY
+class EnEmy:public GameObj{
+    public:
+        bool livebegin;
+        int lives;
+        int speed;
+        int boundx;
+        int boundy;
 
+        EnEmy():GameObj(EMEMY){
+            
+        }
+};
