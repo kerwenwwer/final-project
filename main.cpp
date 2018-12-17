@@ -205,8 +205,8 @@ void InitBullet(Bullet bullet[],int size){
 void DrawBullet(Bullet bullet[],int size){
     for(int i=0;i<size;i++){
         if(bullet[i].live) 
-            al_draw_filled_circle(bullet[i].x-5,bullet[i].y,4,al_map_rgb(253,2,255));
-            al_draw_filled_circle(bullet[i].x+5,bullet[i].y,4,al_map_rgb(253,2,255));
+            al_draw_filled_circle(bullet[i].x-9,bullet[i].y,3,al_map_rgb(253,2,255));
+            al_draw_filled_circle(bullet[i].x+9,bullet[i].y,3,al_map_rgb(253,2,255));
     }
 }
 void FireBullet(Bullet bullet[],int size,spaceship &ship){
