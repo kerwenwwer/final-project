@@ -179,7 +179,6 @@ void InitShip(SpaceShip &ship){
     ship.boundy=7;
     ship.score=0;
 }
-
 void DrawSip(SpaceShip &ship){
     al_draw_filled_rectangle(ship.x-9,ship.y-5,ship.x-7,ship.y+10,al_map_rgb(255,0,255));
     al_draw_filled_rectangle(ship.x+9,ship.y-5,ship.x+7,ship.y+10,al_map_rgb(255,0,255));
@@ -246,7 +245,7 @@ void InitBackGround(BackGround background[],int size){
     for(int i=0;i<size;i++){
         background[i].ID=BACKGROUNG;
         background[i].live=false;
-        background[i].speed=5;
+        background[i].speed=4;
     }
 }
 void DrawBackGround(BackGround background[],int size){
