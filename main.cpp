@@ -8,8 +8,9 @@
 #include"object.h"
 
 #define GAME_TERMINATE 666
-#define NUMBER_BULLETS 510
-#define NUMBER_BADGUY 15
+#define NUMBER_BULLETS 10
+#define NUMBER_BADGUY 10
+#define NUMBER_COMET 5
 #define width 600
 #define height 800
 #define FPS 60
@@ -34,25 +35,27 @@ void InitBullet(Bullet bullet[],int size);
 void DrawBullet(Bullet bullet[],int size);
 void FireBullet(Bullet bullet[],int size,SpaceShip &ship);
 void UpdateBullet(Bullet bullet[],int size);
-void CollideBullet();
+void CollideBullet(Bullet bullet[],int bSize,Comet comets[],int cSize);
 //Announce function for badguy
-void InitBackGround(BackGround background[],int size);
-void DrawBackGround(BackGround background[],int size);
-void StartBackGround(BackGround background[],int size);
-void UpdateBackGround(BackGround background[],int size);
-//INIT ENEMY
-void InitEnemy(EnEmy &enemy);
+void InitComet(Comet comets[],int size);
+void DrawComet(Comet comets[],int size);
+void StartComet(Comet comets[],int size);
+void UpdateComet(Comet comets[],int size);
+void CollideComet(Comet comet[],int cSize,SpaceShip &ship);
+/*void InitEnemy(EnEmy &enemy);
 void DrawEnemy(EnEmy &enemy);
 void StartEnemy(EnEmy &enemy);
 void MoveEnemyUp(EnEmy &enemy);
 void MoveEnemyDown(EnEmy &enemy);
 void MoveEnemyLeft(EnEmy &enemy);
-void MoveEnemyRight(EnEmy &enemy);
+void MoveEnemyRight(EnEmy &enemy);*/
 //init object
 SpaceShip ship;
 Bullet bullet[NUMBER_BULLETS];
-BackGround background[NUMBER_BADGUY];
-EnEmy enemy;
+//BackGround background[NUMBER_BADGUY];
+Comet comets[NUMBER_COMET];
+//EnEmy enemy;
+
 
 // ALLEGRO Variables
 ALLEGRO_DISPLAY* display = NULL;
@@ -81,7 +84,7 @@ int main(int argc, char *argv[]) {
     srand(time(NULL));
     InitShip(ship);
     InitBullet(bullet,NUMBER_BULLETS);
-    InitBackGround(background,NUMBER_BADGUY);
+    InitComet(comets,NUMBER_COMET);
 
     al_register_event_source(event_queue,al_get_display_event_source(display));
     al_register_event_source(event_queue,al_get_keyboard_event_source());
@@ -105,8 +108,11 @@ int main(int argc, char *argv[]) {
             if(keys[SPACE]){
             }
             UpdateBullet(bullet,NUMBER_BULLETS);
-            StartBackGround(background,NUMBER_BADGUY);
-            UpdateBackGround(background,NUMBER_BADGUY);
+            StartComet(comets,NUMBER_COMET);
+            UpdateComet(comets,NUMBER_COMET);
+            CollideBullet(bullet,NUMBER_BULLETS,comets,NUMBER_COMET);
+            CollideComet(comets,NUMBER_COMET,ship);
+
 
         }else if(event.type==ALLEGRO_EVENT_DISPLAY_CLOSE){
             done=true;    
@@ -160,7 +166,7 @@ int main(int argc, char *argv[]) {
             redraw=false;
             DrawSip(ship);
             DrawBullet(bullet,NUMBER_BULLETS);
-            DrawBackGround(background,NUMBER_BADGUY);
+            DrawComet(comets,NUMBER_COMET);
             al_flip_display();
             al_clear_to_color(al_map_rgb(0,0,0));
         }
@@ -175,8 +181,8 @@ void InitShip(SpaceShip &ship){
     ship.ID=PLAYER;
     ship.lives=3;
     ship.speed=7;
-    ship.boundx=6;
-    ship.boundy=7;
+    ship.boundx=7;
+    ship.boundy=6;
     ship.score=0;
 }
 void DrawSip(SpaceShip &ship){
@@ -204,6 +210,7 @@ void MoveRight(SpaceShip &ship){
 }
 
 
+
 //BULLET FUNCTION
 void InitBullet(Bullet bullet[],int size){
     for(int i=0;i<size;i++){
@@ -215,8 +222,8 @@ void InitBullet(Bullet bullet[],int size){
 void DrawBullet(Bullet bullet[],int size){
     for(int i=0;i<size;i++){
         if(bullet[i].live) 
-            al_draw_filled_circle(bullet[i].x-9,bullet[i].y,3,al_map_rgb(253,2,255));
-            al_draw_filled_circle(bullet[i].x+9,bullet[i].y,3,al_map_rgb(253,2,255));
+            al_draw_filled_circle(bullet[i].x,bullet[i].y,3,al_map_rgb(253,2,255));
+            //al_draw_filled_circle(bullet[i].x+9,bullet[i].y,3,al_map_rgb(253,2,255));
     }
 }
 void FireBullet(Bullet bullet[],int size,SpaceShip &ship){
@@ -233,24 +240,41 @@ void UpdateBullet(Bullet bullet[],int size){
     for(int i=0;i<size;i++){
         if(bullet[i].live){
             bullet[i].y-=bullet[i].speed;
-            if(bullet[i].y >height)
+            if(bullet[i].y <10)
                 bullet[i].live=false;
 
         }
     }
 }
+void CollideBullet(Bullet bullet[],int bSize,Comet comets[],int cSize){
+    for(int i=0;i<bSize;i++){
+        if(bullet[i].live){
+            for(int j=0;j<cSize;j++){
+                if(comets[j].live){
+                    if(bullet[i].x<(comets[j].x+comets[j].boundx)&&
+                        bullet[i].x>(comets[j].x-comets[j].boundx)&&
+                        bullet[i].y<(comets[j].y+comets[j].boundy)&&
+                        bullet[i].y>(comets[j].y-comets[j].boundy)){
+                            bullet[i].live=false;
+                            comets[j].live=false;
 
+                    }
+                }
+            }
+        }
+    }
+}
 //BACKGROUND FUNCTION
-void InitBackGround(BackGround background[],int size){
+/*void InitBackGround(BackGround background[],int size){
     for(int i=0;i<size;i++){
-        background[i].ID=BACKGROUNG;
+        background[i].ID=EMEMY;
         background[i].live=false;
         background[i].speed=4;
     }
 }
 void DrawBackGround(BackGround background[],int size){
     for(int i=0;i<size;i++){
-        al_draw_filled_circle(background[i].x,background[i].y,5,al_map_rgb(99,99,99));
+        al_draw_filled_circle(background[i].x,background[i].y,20,al_map_rgb(99,99,99));
     }
 }
 void StartBackGround(BackGround background[],int size){
@@ -271,10 +295,59 @@ void UpdateBackGround(BackGround background[],int size){
                 background[i].live=false;
         }
     }
+}*/
+void InitComet(Comet comets[],int size){
+    for(int i=0;i<size;i++){
+        comets[i].ID=COMET;
+        comets[i].live=false;
+        comets[i].speed=4;
+        comets[i].boundx=18;
+        comets[i].boundy=18;
+    }
 }
-
+void DrawComet(Comet comets[],int size){
+    for(int i=0;i<size;i++){
+        al_draw_filled_circle(comets[i].x,comets[i].y,18,al_map_rgb(99,99,99));
+    }
+}
+void StartComet(Comet comets[],int size){
+    for(int i=0;i<size;i++){
+        if(rand()%500==0){
+            comets[i].live=true;
+            comets[i].y=20;
+            comets[i].x=30+rand()%(width-60);
+            break;
+        }
+    }
+}
+void UpdateComet(Comet comets[],int size){
+    for(int i=0;i<size;i++){
+        if(comets[i].live){
+            comets[i].y+=comets[i].speed;
+            if(comets[i].y>height+40)
+                comets[i].live=false;
+        }
+    }
+}
+void CollideComet(Comet comets[],int cSize,SpaceShip &ship){
+    for(int i=0;i<cSize;i++){
+        if(comets[i].live){
+            if(comets[i].x+comets[i].boundx>ship.x-ship.boundx&&
+                comets[i].x-comets[i].boundx<ship.x+ship.boundx&&
+                comets[i].y+comets[i].boundy>ship.y-ship.boundy&&
+                comets[i].y-comets[i].boundy<ship.y+ship.boundy){
+                    ship.lives--;
+                    comets[i].live=false;
+                }else if(comets[i].y>height+20){
+                    comets[i].live=false;
+                    ship.lives--;
+                    
+                }
+        }
+    }
+}
 //ENEMY FUNCTIONS
-void InitEnemy(EnEmy &enemy){
+/*void InitEnemy(EnEmy &enemy){
     enemy.livebegin=false;
     enemy.x=10+rand()%(width-40);
     enemy.y=(rand()%100)+1;
@@ -298,4 +371,4 @@ void MoveEnemyLeft(EnEmy &enemy){
 }
 void MoveEnemyRight(EnEmy &enemy){
 
-}
+}*/

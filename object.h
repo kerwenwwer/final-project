@@ -32,7 +32,8 @@ class BackGround:public GameObj{
     public:
         bool live;
         int speed;
-
+        int boundx;
+        int boundy;
         BackGround():GameObj(BACKGROUNG){
 
         }
@@ -48,5 +49,17 @@ class EnEmy:public GameObj{
 
         EnEmy():GameObj(EMEMY){
             
+        }
+};
+
+class Comet:public GameObj{
+    public:
+        bool live;
+        int speed;
+        int boundx;
+        int boundy;
+
+        Comet():GameObj(COMET){
+
         }
 };
