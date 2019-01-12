@@ -9,7 +9,7 @@
 //OBJECT INIT
 enum KEYS{UP,DOWN,LEFT,RIGHT,SPACE, ESCAPE, ENTER};
 enum STATUS{MENU, PLAYING, GAMEOVER, PAUSE};
-enum MENUSTATE{START, EXIT};
+enum MENUSTATE{START, EXIT, AGAIN, ENDEXIT};
 bool keys[7]={false,false,false,false,false,false,false};
 
 //SPACESHIP
