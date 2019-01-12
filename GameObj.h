@@ -1,10 +1,11 @@
 enum ObjTypeID
-{PLAYER,BULLENT,BACKGROUNG,EMEMY,COMET};
+{PLAYER,BULLENT,BACKGROUNG,EMEMY,COMET, NOTE};
 
 class GameObj{
     public:
         int x;
         int y;
+        
         ObjTypeID ID;
 
         GameObj(ObjTypeID objTypeID){

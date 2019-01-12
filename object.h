@@ -7,15 +7,16 @@
 #include<allegro5/allegro_acodec.h>
 #include "GameObj.h"
 //OBJECT INIT
-enum KEYS{UP,DOWN,LEFT,RIGHT,SPACE, ESCAPE};
-enum STATUS{MENU, PLAYING, GAMEOVER};
-bool keys[5]={false,false,false,false,false};
+enum KEYS{UP,DOWN,LEFT,RIGHT,SPACE, ESCAPE, ENTER};
+enum STATUS{MENU, PLAYING, GAMEOVER, PAUSE};
+enum MENUSTATE{START, EXIT};
+bool keys[7]={false,false,false,false,false,false,false};
 
 //SPACESHIP
 class SpaceShip:public GameObj{
     public:
         int lives;
-        int speed;
+        float speed;
         int boundx;
         int boundy;
         int score;
@@ -28,7 +29,7 @@ class SpaceShip:public GameObj{
 class Bullet:public GameObj{
     public:
         bool live;
-        int speed;
+        float speed;
 
         Bullet():GameObj(BULLENT){
 
@@ -38,7 +39,7 @@ class Bullet:public GameObj{
 class BackGround:public GameObj{
     public:
         bool live;
-        int speed;
+        float speed;
         int boundx;
         int boundy;
         BackGround():GameObj(BACKGROUNG){
@@ -50,7 +51,7 @@ class EnEmy:public GameObj{
     public:
         bool livebegin;
         int lives;
-        int speed;
+        float speed;
         int boundx;
         int boundy;
 
@@ -62,11 +63,18 @@ class EnEmy:public GameObj{
 class Comet:public GameObj{
     public:
         bool live;
-        int speed;
+        float speed;
         int boundx;
         int boundy;
 
         Comet():GameObj(COMET){
+
+        }
+};
+
+class Take_Note:public GameObj{
+    public:
+        Take_Note():GameObj(NOTE){
 
         }
 };
