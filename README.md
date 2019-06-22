@@ -1,7 +1,7 @@
 # final-project
 This is my final-project in programming language class
 
-I using Allegro API to build my C language Project
+I using Allegro API to build my Project
 
 ### Install Allegro 
 
